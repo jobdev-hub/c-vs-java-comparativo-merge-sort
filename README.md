@@ -1,4 +1,4 @@
-# academy-openmp-x-java-merge-sort
+# Academy mergeSort (C versus Java)
 
 #### Objetivo: Comparar mergeSort -> C (sequencial) X C (paralelo) X JAVA (paralelo).
 
