@@ -1,2 +1,9 @@
 # academy-openmp-x-java-merge-sort
-[Atividade N1 - Algoritmos de Ordenacao Paralelo.pdf](https://github.com/jobdev-hub/academy-openmp-x-java-merge-sort/files/7325189/Atividade.N1.-.Algoritmos.de.Ordenacao.Paralelo.pdf)
+
+#### Objetivo: Comparar mergeSort -> C (sequencial) X C (paralelo) X JAVA (paralelo).
+
+###### O código deve ser testado em vetores 2^(i) * 1000, onde i(0~25).
+
+###### Apresentar gráfico comparativo: eixo x (milissegundos), eixo y (qtd elementos)
+
+#### Link gráfico: https://docs.google.com/spreadsheets/d/1hnN1jpKfY_LMfqxhU5A79oF2MCKgKN2eYNjtco-lx8w/edit?usp=sharing
