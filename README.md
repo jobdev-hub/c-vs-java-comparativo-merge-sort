@@ -1,6 +1,6 @@
 # Academy mergeSort (C versus Java)
 
-#### Objetivo: Comparar mergeSort -> C (sequencial) X C (paralelo) X JAVA (paralelo).
+#### Objetivo: Comparar mergeSort -> C (sequencial) X C (paralelo omp) X JAVA (paralelo).
 
 ###### O código deve ser testado em vetores 2^(i) * 1000, onde i(0~25).
 
