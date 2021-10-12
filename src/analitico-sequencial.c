@@ -49,7 +49,7 @@ int main(){
     for(i=0; i <= 25; i++){
         num = pow(2,i)*1000;
         a = (int *)(malloc(num * sizeof(int)));
-        srand(time(NULL));
+        srand(time(0));
         for(j=0; j < num; j++) a[j] = intRand(1, 100);
         t = clock();
         mergeSort(a, 0, num-1);
