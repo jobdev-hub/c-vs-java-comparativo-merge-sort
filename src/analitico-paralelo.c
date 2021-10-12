@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <time.h>
 #include <math.h>
+#define TAM 21
 
 void mergeSort(int a[], int inicio, int fim){
     int meio;
@@ -49,13 +50,13 @@ int main(){
     FILE *arquivo;
     arquivo = fopen("analitico-paralelo.csv","w");
 
-    for(i=0; i <= 25; i++){
+    for(i=0; i < TAM; i++){
         elementos = pow(2,i)*1000;
         a = (int *)(malloc(elementos * sizeof(int)));
         srand(time(0));
         for(j=0; j < elementos; j++) a[j] = intRand(1, 100);
         t = clock();
-        #pragma omp parallel num_threads(8)
+        #pragma omp parallel num_threads(4)
         {
         mergeSort(a, 0, elementos-1);
         }
@@ -63,6 +64,10 @@ int main(){
         tempo = ((float)t)/((CLOCKS_PER_SEC/1000)); // http://wurthmann.blogspot.com/2015/04/medir-tempo-de-execucao-em-c.html
         printf("elementos %d => %d ms\n", elementos, (int)tempo);
         fprintf(arquivo,"%d;%d\n",elementos,(int)tempo);
+        setbuf(stdout, 0);
     }
+
+    fclose(arquivo);
+
     return 0;
 }
