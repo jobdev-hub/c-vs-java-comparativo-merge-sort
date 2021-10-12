@@ -46,6 +46,9 @@ int main(){
     int *a, num, i, j;
     float tempo;
     clock_t t;
+    FILE *arquivo;
+    arquivo = fopen("analitico-sequencial.csv","w");
+
     for(i=0; i <= 25; i++){
         num = pow(2,i)*1000;
         a = (int *)(malloc(num * sizeof(int)));
@@ -55,7 +58,8 @@ int main(){
         mergeSort(a, 0, num-1);
         t = clock() - t;
         tempo = ((float)t)/((CLOCKS_PER_SEC/1000)); // http://wurthmann.blogspot.com/2015/04/medir-tempo-de-execucao-em-c.html
-        printf("\n%d elements => %.0f ms", num, tempo);
+        printf("elementos %d => %d ms\n", elementos, (int)tempo);
+        fprintf(arquivo,"%d;%d\n",elementos,(int)tempo);
     }
     return 0;
 }
