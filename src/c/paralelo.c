@@ -3,78 +3,85 @@
 #include <time.h>
 #include <math.h>
 #include <omp.h>
-#define TAM 21
+#define TAM 19
 
-void mergeSort(int a[], int inicio, int fim){
-    int meio;
-    if(inicio < fim){
-        meio = floor((inicio+fim)/2);
+void mergesort(int a[],int i,int j);
+void merge(int a[],int i1,int j1,int i2,int j2);
 
-        #pragma omp parallel sections num_threads(2)
-        {
-          #pragma omp section
-          {
-           mergeSort(a,inicio,meio);
-          }
-
- 		  #pragma omp section
- 		  {
- 		   mergeSort(a,meio+1,fim);
- 		  }
-        }
-        merge(a,inicio,meio,fim);
-    }
-}
-
-void merge(int a[], int inicio, int meio, int fim){
-    int *temp, p1, p2, tam, i, j, k;
-    int fim1 = 0, fim2 = 0;
-    tam = fim-inicio+1;
-    p1 = inicio;
-    p2= meio+1;
-    temp = (int *) malloc(tam*sizeof(int));
-    if (temp != NULL){
-        for (i=0; i < tam; i++){
-            if(!fim1 && !fim2){
-                if(a[p1] < a[p2]) temp[i]=a[p1++];
-                else temp[i]=a[p2++];
-                if(p1>meio) fim1=1;
-                if(p2>fim) fim2=1;
-            } else{
-                if(!fim1) temp[i]=a[p1++];
-                else temp[i]=a[p2++];
-            }
-        }
-        for(j=0, k=inicio; j<tam; j++, k++) a[k]=temp[j];
-    }
-    free(temp);
-}
-
-int intRand(int min, int max){
-    int n = (rand() % (max - min + 1)) + min;
-    return n;
-}
-
-int main(){
+int main()
+{
     int *a, elementos, i, j;
     float tempo;
     clock_t t;
     FILE *arquivo;
     arquivo = fopen("analitico-paralelo.csv","w");
+    elementos = 1000;
 
-    for(i=0; i < TAM; i++){
-        elementos = pow(2,i)*1000;
-        a = (int *)(malloc(elementos * sizeof(int)));
+    for(i=0; i < TAM; i++)
+    {
+        a = (int *)malloc(sizeof(int) * elementos);
         srand(time(0));
-        for(j=0; j < elementos; j++) a[j] = intRand(1, 100);
+        for(j=0; j < elementos; j++) a[j] = rand() % 100;
         t = clock();
-        mergeSort(a, 0, elementos-1);
+        mergesort(a, 0, elementos-1);
         t = clock() - t;
         tempo = ((float)t)/((CLOCKS_PER_SEC/1000)); // http://wurthmann.blogspot.com/2015/04/medir-tempo-de-execucao-em-c.html
         printf("elementos %d => %d ms\n", elementos, (int)tempo);
         fprintf(arquivo,"%d;%d\n",elementos,(int)tempo);
         free(a);
+        elementos *= 2;
     }
     return 0;
 }
 
+void mergesort(int a[],int i,int j)
+{
+    int mid;
+    if(i<j)
+    {
+        mid=(i+j)/2;
+        #pragma omp parallel sections num_threads(2)
+        {
+          #pragma omp section
+          {
+            mergesort(a,i,mid);        //left recursion
+          }
+          #pragma omp section
+          {
+            mergesort(a,mid+1,j);    //right recursion
+          }
+        }
+        merge(a,i,mid,mid+1,j);    //merging of two sorted sub-arrays
+    }
+}
+
+void merge(int a[],int i1,int j1,int i2,int j2)
+{
+    int *temp;    //array used for merging
+    int i,j,k,tam;
+    i=i1;    //beginning of the first list
+    j=i2;    //beginning of the second list
+    k=0;
+    tam = j2-i1+1;
+    temp = (int *) malloc(tam*sizeof(int));
+
+    while(i<=j1 && j<=j2)    //while elements in both lists
+    {
+        if(a[i]<a[j])
+            temp[k++]=a[i++];
+        else
+            temp[k++]=a[j++];
+    }
+
+    while(i<=j1)    //copy remaining elements of the first list
+        temp[k++]=a[i++];
+
+    while(j<=j2)    //copy remaining elements of the second list
+        temp[k++]=a[j++];
+
+    //Transfer elements from temp[] back to a[]
+    for(i=i1,j=0;i<=j2;i++,j++)
+        a[i]=temp[j];
+
+    free(temp);
+}
