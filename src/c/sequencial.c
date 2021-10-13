@@ -48,7 +48,7 @@ int main(){
     float tempo;
     clock_t t;
     FILE *arquivo;
-    arquivo = fopen("analitico-paralelo.csv","w");
+    arquivo = fopen("analitico-sequencial.csv","w");
 
     for(i=0; i < TAM; i++){
         elementos = pow(2,i)*1000;
@@ -56,18 +56,12 @@ int main(){
         srand(time(0));
         for(j=0; j < elementos; j++) a[j] = intRand(1, 100);
         t = clock();
-        #pragma omp parallel num_threads(4)
-        {
         mergeSort(a, 0, elementos-1);
-        }
         t = clock() - t;
         tempo = ((float)t)/((CLOCKS_PER_SEC/1000)); // http://wurthmann.blogspot.com/2015/04/medir-tempo-de-execucao-em-c.html
         printf("elementos %d => %d ms\n", elementos, (int)tempo);
         fprintf(arquivo,"%d;%d\n",elementos,(int)tempo);
-        setbuf(stdout, 0);
+        free(a);
     }
-
-    fclose(arquivo);
-
     return 0;
 }
