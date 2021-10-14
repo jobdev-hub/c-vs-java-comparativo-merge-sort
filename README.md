@@ -1,4 +1,4 @@
-# Academy mergeSort (C versus Java)
+# Comparativo algoritmo de ordenação mergeSort
 
 #### Objetivo
 ###### Mensurar tempo de execução (ms) do algoritmo merge-sort de acordo com a quantidade de elementos, em 4 implementações diferentes:
